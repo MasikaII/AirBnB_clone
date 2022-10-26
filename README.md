@@ -1,4 +1,7 @@
-   <h1>AIRBNB CONSOLE</h1>
+# AirBnB clone - The console
+<p align= "center">
+<img src= https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20221026%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221026T123011Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=07c2ba8525066a5f354d935b155e1015acf74be6fe53dfc6faedc1e124281562>
+
 
 
 This project is the first step towards building a full web application: the AirBnB clone.
