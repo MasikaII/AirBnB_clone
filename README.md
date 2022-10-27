@@ -35,5 +35,5 @@ The console or command interpreter create the data model and allows create, upda
 
 <h2>AUTHORS</h2>
 
-<li>Erick adikah</li>
-<li>Stephanie Masika</li>
+<li>Erick adikah</li> @erickadiah
+<li>Stephanie Masika</li> @Masikall
