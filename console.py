@@ -3,7 +3,7 @@ from cmd import Cmd
 import uuid
 from datetime import datetime
 
-class HBNBCommand(cmd.Cmd):
+class HBNBCommand(Cmd):
     '''This is a class definition for the command processor'''
     prompt = '(hbnb)'
 
