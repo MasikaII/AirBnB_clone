@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""contains the entry point of a command interpreter"""
+
+
 from cmd import Cmd
 import uuid
 from datetime import datetime
