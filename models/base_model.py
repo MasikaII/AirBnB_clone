@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
-#this class Base model defines all common attributes methods for other classes
+"""
+A module containing the base class
+"""
+
+
 from datetime import datetime
-import json
 from uuid import uuid4
+import json
+import models
+
 
 class BaseModel:
+    """
+    The base class that defines the common attributes for other classes
+    """
+
     def __init__(self, *args, **kwargs):
         if kwargs:
             for key, value in kwars.items():
@@ -20,14 +30,22 @@ class BaseModel:
                 storage.new(self)
 
     def __str__(self):
+        """
+        Formats the output of class to_dict
+        """
         return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
 
     def save(self):
-        """Updates 'updated_at' current datetime"""
-        self.updated_at = datetime.today()
+        """
+        Updates 'updated_at' current datetime
+        """
+        self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
-        """Returns dictionary containing all keys/values"""
+        """
+        Returns dictionary containing all keys/values of __dict__ of the instance
+        """
         new_dict = self.__dict__.copy()
         new_dict["__class__"] = self.__class__.__name__
         new_dict["created_at"] = self.created_at.isoformat()
