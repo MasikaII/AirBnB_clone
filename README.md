@@ -22,7 +22,7 @@ The console or command interpreter create the data model and allows create, upda
 <li>How to create a command interpreter in Python using the cmd module</li>
 <li>What is Unit testing and how to implement it in a large project</li>
 <li>How to serialize and deserialize a Class</li>
-<li>How to write and read a JSON file<li>
+<li>How to write and read a JSON file</li>
 <li>How to manage datetime</li>
 <li>What is an UUID</li>
 <li>What is args and how to use it</li>
@@ -30,9 +30,11 @@ The console or command interpreter create the data model and allows create, upda
 <li>How to handle named arguments in a function</li>
 
 <h2>Requeriments 📋</h2>
-Airbnb was built and tested in Ubuntu 14.04 LTS via Vagrant in VirtualBox. Programming languaje python3
+
+Airbnb was built and tested in Ubuntu 20.04 LTS via Vagrant in VirtualBox. Programming languaje python3
 
 <h2>Installation and execution 🔧</h2>
+
 <li>Clone the repository
 $ git clone https://github.com/MasikaII/AirBnB_clone
 
