@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """contains the entry point of a command interpreter"""
-from cmd
+import cmd
 
 
-class HBNBCommand(Cmd):
+class HBNBCommand(cmd.Cmd):
 
     '''This is a class definition for the command processor'''
     prompt = '(hbnb)'
