@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 this class Base model defines all common attributes methods for other classes
 """
-
-
 from datetime import datetime
 import json
 from uuid import uuid4
