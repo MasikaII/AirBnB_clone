@@ -1,41 +1,49 @@
 #!/usr/bin/python3
 """
-this class Base model defines all common attributes methods for other classes
+A module containing a base class
 """
+
+
 from datetime import datetime
-import json
 from uuid import uuid4
+import json
 import models
 
 
 class BaseModel:
+    """The base class that defines all common attributes for other classes"""
+
     def __init__(self, *args, **kwargs):
+        """instantiates the public class attributes"""
         if kwargs:
-            for key, value in kwars.items():
+            for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key == "__class_":
-                        continue
+                if key == "__class__":
+                    continue
                 setattr(self, key, value)
-            else:
-                self.id = str(uuid4())
-                self.created_at = datetime.now()
-                self.updated_at = datetime.now()
-                models.storage.new(self)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
-        """ prints the string reprsentation of the class"""
+        """prints the string representation of the class"""
         return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
 
     def save(self):
-        """Updates 'updated_at' current datetime"""
+        """
+        updates the public instance attribute
+        updated_at with the current datetime
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
         """
-        Returns dictionary containing all keys/values
-        updated_at with the current datetime
+        returns a dictionary containing all
+        keys/values of __dict__ of the instance
         """
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = self.__class__.__name__
