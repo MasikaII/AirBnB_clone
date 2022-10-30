@@ -12,7 +12,7 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key == "__class_":
                         continue
-                setattr(self, key, value)
+                t mergesetattr(self, key, value)
             else:
                 self.id = str(uuid4())
                 self.created_at = datetime.today()
