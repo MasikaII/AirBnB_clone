@@ -1,20 +1,10 @@
-#!/usr/bin/python3
-"""
-A module containing the base class
-"""
-
-
+#!/usr/bin/env python3
+#this class Base model defines all common attributes methods for other classes
 from datetime import datetime
-from uuid import uuid4
 import json
-import models
-
+from uuid import uuid4
 
 class BaseModel:
-    """
-    The base class that defines the common attributes for other classes
-    """
-
     def __init__(self, *args, **kwargs):
         if kwargs:
             for key, value in kwars.items():
@@ -22,7 +12,7 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key == "__class_":
                         continue
-                setattr(self, key, value)
+                t mergesetattr(self, key, value)
             else:
                 self.id = str(uuid4())
                 self.created_at = datetime.today()
@@ -30,22 +20,14 @@ class BaseModel:
                 storage.new(self)
 
     def __str__(self):
-        """
-        Formats the output of class to_dict
-        """
         return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
 
     def save(self):
-        """
-        Updates 'updated_at' current datetime
-        """
-        self.updated_at = datetime.now()
-        models.storage.save()
+        """Updates 'updated_at' current datetime"""
+        self.updated_at = datetime.today()
 
     def to_dict(self):
-        """
-        Returns dictionary containing all keys/values of __dict__ of the instance
-        """
+        """Returns dictionary containing all keys/values"""
         new_dict = self.__dict__.copy()
         new_dict["__class__"] = self.__class__.__name__
         new_dict["created_at"] = self.created_at.isoformat()
