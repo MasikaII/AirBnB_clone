@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#this class Base model defines all common attributes methods for other classes
 from datetime import datetime
 import json
 from uuid import uuid4
@@ -11,7 +12,7 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key == "__class_":
                         continue
-                    setattr(self, key, value)
+                setattr(self, key, value)
             else:
                 self.id = str(uuid4())
                 self.created_at = datetime.today()
