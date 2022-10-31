@@ -23,7 +23,7 @@ class HBNBCommand(cmd.Cmd):
         """Gives more information on the method quit"""
         print("Quit command to exit the program\n")
 
-    def emptyline(sele is empty print nothing
+    def emptyline(self):
         """Do nothing when line is empty"""
         pass
 
