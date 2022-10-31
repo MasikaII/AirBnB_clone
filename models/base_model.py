@@ -8,6 +8,7 @@ import json
 import models
 from models.engine.file_storage import FileStorage
 
+
 class BaseModel:
     """The base class that defines all common attributes for other classes"""
 
