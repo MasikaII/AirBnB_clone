@@ -23,130 +23,130 @@ class HBNBCommand(cmd.Cmd):
         """Gives more information on the method quit"""
         print("Quit command to exit the program\n")
 
-    def emptyline(self):
-        """when line is empty print nothing"""
+    def emptyline(sele is empty print nothing
+        """Do nothing when line is empty"""
         pass
+
+    """Creating the console commands"""
     def do_create(self, line):
-        """
-        this command is for creation of new instances
-        usage: create <name>
-        """
+        """This is the command to create new instances
+        and saves it (to the JSON file)
+        Usage: create <name>"""
         if not line:
             print("** class name missing **")
         elif line not in HBNBCommand.selected:
             print("** class doesn't exist **")
         else:
-            line = BaseModel()
+            line = eval(line)()
+            line.save()
             print(line.id)
 
-    def do_show(self, arg):
-        """Usage: show <class> <id> or <class>.show(<id>)
-        Display the string representation of a class instance of a given id.
+    def do_show(self, line):
+        """Prints the string representation of an
+        instance based on the class name and id
+        usage: show BaseModel 1234-1234-1234
         """
-        argl = parse(arg)
-        objdict = storage.all()
-        if len(argl) == 0:
-            print("** class name missing **")
-        elif argl[0] not in HBNBCommand.__classes:
-            print("** class doesn't exist **")
-        elif len(argl) == 1:
-            print("** instance id missing **")
-        elif "{}.{}".format(argl[0], argl[1]) not in objdict:
-            print("** no instance found **")
-        else:
-            print(objdict["{}.{}".format(argl[0], argl[1])])
+        all_objects = storage.all()
 
-    def do_destroy(self, arg):
-        """Usage: destroy <class> <id> or <class>.destroy(<id>)
-        Delete a class instance of a given id."""
-        argl = parse(arg)
-        objdict = storage.all()
-        if len(argl) == 0:
-            print("** class name missing **")
-        elif argl[0] not in HBNBCommand.__classes:
-            print("** class doesn't exist **")
-        elif len(argl) == 1:
-            print("** instance id missing **")
-        elif "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
-            print("** no instance found **")
-        else:
-            del objdict["{}.{}".format(argl[0], argl[1])]
-            storage.save()
+        if line:
+            line = line.split()
+            if len(line) == 1:
+                print("** instance id missing **")
+            elif len(line) == 2:
+                name = line[0]
+                name_id = line[1]
 
-    def do_all(self, arg):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
-        argl = parse(arg)
-        if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
-            print("** class doesn't exist **")
-        else:
-            objl = []
-            for obj in storage.all().values():
-                if len(argl) > 0 and argl[0] == obj.__class__.__name__:
-                    objl.append(obj.__str__())
-                elif len(argl) == 0:
-                    objl.append(obj.__str__())
-            print(objl)
+                if name not in type(self).selected:
+                    print("** class doesn't exist **")
 
-    def do_count(self, arg):
-        """Usage: count <class> or <class>.count()
-        Retrieve the number of instances of a given class."""
-        argl = parse(arg)
-        count = 0
-        for obj in storage.all().values():
-            if argl[0] == obj.__class__.__name__:
-                count += 1
-        print(count)
-
-    def do_update(self, arg):
-        """Usage: update <class> <id> <attribute_name> <attribute_value> or
-       <class>.update(<id>, <attribute_name>, <attribute_value>) or
-       <class>.update(<id>, <dictionary>)
-        Update a class instance of a given id by adding or updating
-        a given attribute key/value pair or dictionary."""
-        argl = parse(arg)
-        objdict = storage.all()
-
-        if len(argl) == 0:
-            print("** class name missing **")
-            return False
-        if argl[0] not in HBNBCommand.__classes:
-            print("** class doesn't exist **")
-            return False
-        if len(argl) == 1:
-            print("** instance id missing **")
-            return False
-        if "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
-            print("** no instance found **")
-            return False
-        if len(argl) == 2:
-            print("** attribute name missing **")
-            return False
-        if len(argl) == 3:
-            try:
-                type(eval(argl[2])) != dict
-            except NameError:
-                print("** value missing **")
-                return False
-
-        if len(argl) == 4:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            if argl[2] in obj.__class__.__dict__.keys():
-                valtype = type(obj.__class__.__dict__[argl[2]])
-                obj.__dict__[argl[2]] = valtype(argl[3])
-            else:
-                obj.__dict__[argl[2]] = argl[3]
-        elif type(eval(argl[2])) == dict:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            for k, v in eval(argl[2]).items():
-                if (k in obj.__class__.__dict__.keys() and
-                        type(obj.__class__.__dict__[k]) in {str, int, float}):
-                    valtype = type(obj.__class__.__dict__[k])
-                    obj.__dict__[k] = valtype(v)
+                key_name = name + "." + name_id
+                if key_name in all_objects.keys():
+                    print(all_objects[key_name])
                 else:
-                    obj.__dict__[k] = v
-        storage.save()
+                    print("** no instance found **")
+        else:
+            print("** class name missing **")
+
+    def do_destroy(self, line):
+        """Deletes an instance based on class name and id
+        usage: destroy BaseModel 1234-1234-1234
+        """
+        all_objects = storage.all()
+
+        if line:
+            line = line.split()
+            if len(line) == 1:
+                print("** instance id missing **")
+            elif len(line) >= 2:
+                name = line[0]
+                name_id = line[1]
+
+                if name not in type(self).selected:
+                    print("** class doesn't exist **")
+
+                key_name = name + "." + name_id
+                if key_name in all_objects.keys():
+                    del all_objects[key_name]
+                else:
+                    print("** no instance found **")
+        else:
+            print("** class name missing **")
+
+    def do_all(self, line):
+        """ Prints all string representation of all instances
+            Usage: all BaseModel
+        """
+        all_objects = storage.all()
+        if line:
+            line = line.split()
+            if line[0] in type(self).selected:
+                if all_objects:
+                    for key, value in all_objects.items():
+                        print(value)
+                else:
+                    pass
+            else:
+                print("** class doesn't exist **")
+
+    def do_update(self, line):
+        """Updates an instance based on the class name and id by adding
+        or updating attribute (save the change into the JSON file).
+        Usage: update BaseModel 1234-1234-1234 email "aibnb@mail.com"
+        """
+        all_objects = storage.all()
+        if line:
+            line = line.split()
+            if len(line) == 1 and line[0] not in type(self).selected:
+                print("** class doesn't exist**")
+
+            elif len(line) == 2:
+                key_name = line[0] + "." + line[1]
+                if key_name not in all_objects.keys():
+                    print("** no instance found **")
+                else:
+                    print("** attribute name missing **")
+            elif len(line) == 3:
+                key_name = line[0] + "." + line[1]
+                if key_name in all_objects.keys():
+                    print("** value missing **")
+                else:
+                    print("** no instance found **")
+            elif len(line) >= 4:
+                key_name = line[0] + "." + line[1]
+                if key_name in all_objects.keys():
+                    update_obj = all_objects[key_name]
+                    update_to_dict = update_obj.to_dict()
+                    class_name = update_to_dict["__class__"]
+                    update_to_dict[line[2]] = line[3]
+                    new_object = eval(class_name)(**update_to_dict)
+                    new_object.save()
+                    storage.new(new_object)
+
+                else:
+                    print("** no instance found **")
+        else:
+            print("** class name missing **")
+
 
 
 if __name__ == "__main__":
