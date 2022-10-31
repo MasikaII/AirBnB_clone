@@ -4,33 +4,35 @@ A module that contains the test suite for the BaseModel class
 """
 import unittest
 from time import sleep
+import os
 from datetime import datetime
 from uuid import uuid4
-import os
 from models.base_model import BaseModel
 
-class TestBaseModel(unitest.TestCase):
+
+class TestBaseModel(unittest.TestCase):
     """
     The test suite for models.base_model.BaseModel
     """
 
-    def test_if_BaseMode__instance_has_id(self):
+    def test_if_BaseModel_instance_has_id(self):
         """
-        checks that instance has an id assigned on initilization
+        Checks that instance has an id assigned on initialization
         """
         b = BaseModel()
         self.assertTrue(hasattr(b, "id"))
 
-    def test_atr_representation(self):
+    def test_str_representation(self):
         """
-        checks if the string representation is appropriate
+        Checks if the string representation is appropriate
         """
         b = BaseModel()
-        self.assertEqual(str(b), "[BaseModel] ({}) {}".format(b.id, b.__dict__))
+        self.assertEqual(str(b),
+                         "[BaseModel] ({}) {}".format(b.id, b.__dict__))
 
     def test_ids_is_unique(self):
         """
-        checks if id is generated randomly and uniquely
+        Checks if id is generated randomly and uniquely
         """
         b1 = BaseModel()
         b2 = BaseModel()
@@ -38,50 +40,58 @@ class TestBaseModel(unitest.TestCase):
 
     def test_type_of_id_is_str(self):
         """
-        checks that id genarated is a str object
+        Checks that id generated is a str object
         """
         b = BaseModel()
         self.assertTrue(type(b.id) is str)
 
     def test_created_at_is_datetime(self):
         """
-        checks that the attribute 'created_at' is a datetime object
+        Checks that the attribute 'created_at' is a datetime object
         """
         b = BaseModel()
-        self.assertTrue(type(b.creat_at) is datetime)
+        self.assertTrue(type(b.created_at) is datetime)
+
+    def test_updated_at_is_datetime(self):
+        """
+        Checks that the attribute 'updated_at' is a datetime object
+        """
+        b = BaseModel()
+        self.assertTrue(type(b.updated_at) is datetime)
 
     def test_two_models_different_created_at(self):
         """
-        checks that the attribute 'created_at' of 2 models are diffrent
+        Checks that the attribute 'created_at' of 2 models are different
         """
         b1 = BaseModel()
         sleep(0.02)
         b2 = BaseModel()
         sleep(0.02)
-        self.assertless(b1.created_at, b2.created_at)
+        self.assertLess(b1.created_at, b2.created_at)
 
-    def test_args_unsued(self):
+    def test_args_unused(self):
         """
-        checks that the attribute 'args' is not used.
+        Checks that the attribute 'args' is not used.
         """
         b = BaseModel(None)
-        self.asertNotin(None, b.__dict.value())
+        self.assertNotIn(None, b.__dict__.values())
 
     def test_that_created_at_equals_updated_at_initially(self):
         """
-        checks that save() method updatyes the updated_at attribute
+        Checks that create_at == updated_at at initialization
         """
         b = BaseModel()
-        self.assertEqual(b.created_at, b.updated)
+        self.assertEqual(b.created_at, b.updated_at)
 
     def test_that_save_func_update_update_at_attr(self):
         """
-        checks thats save() method updates the updated-at attributes
+        Checks that save() method updates the updated_at attribute
         """
         b = BaseModel()
         b.save()
         self.assertNotEqual(b.created_at, b.updated_at)
-        self.assertGreater(b.updated_at.microsecond,b.created_at.microsecond)
+        self.assertGreater(b.updated_at.microsecond,
+                           b.created_at.microsecond)
 
     def test_if_to_dict_returns_dict(self):
         """
@@ -90,12 +100,26 @@ class TestBaseModel(unitest.TestCase):
         b = BaseModel()
         self.assertTrue(type(b.to_dict()) is dict)
 
-    def test_that_created_at_return_by_to_dict_is_an_iso_string(self):
+    def test_if_to_dict_returns_class_dunder_method(self):
         """
-        checks that update_at is stored  as a str obj in iso Format
+        Checks if BaseModel.to_dict() contains __class__
         """
         b = BaseModel()
-        self.assertEqual(b.to_dict()["update_at"], b.update_at.isoformat())
+        self.assertTrue("__class__" in b.to_dict())
+
+    def test_that_created_at_returned_by_to_dict_is_an_iso_string(self):
+        """
+        Checks that created_at is stored as a str obj in ISO format
+        """
+        b = BaseModel()
+        self.assertEqual(b.to_dict()["created_at"], b.created_at.isoformat())
+
+    def test_that_updated_at_returned_by_to_dict_is_an_iso_string(self):
+        """
+        Checks that updated_at is stored as a str obj in ISO format
+        """
+        b = BaseModel()
+        self.assertEqual(b.to_dict()["updated_at"], b.updated_at.isoformat())
 
     def test_if_to_dict_returns_the_accurate_number_of_keys(self):
         """
@@ -138,10 +162,10 @@ class TestBaseModel(unitest.TestCase):
         """
         dt = datetime.now()
         dt_iso = dt.isoformat()
-        b = BaseModel("1234", id="234", created_at=dt_iso, name="Firdaus")
+        b = BaseModel("1234", id="234", created_at=dt_iso, name="Erick")
         self.assertEqual(b.id, "234")
         self.assertEqual(b.created_at, dt)
-        self.assertEqual(b.name, "Firdaus")
+        self.assertEqual(b.name, "Erick")
 
     def test_when_kwargs_passed_is_more_than_default(self):
         """
@@ -150,7 +174,7 @@ class TestBaseModel(unitest.TestCase):
         """
         my_dict = {"id": uuid4(), "created_at": datetime.utcnow().isoformat(),
                    "updated_at": datetime.utcnow().isoformat(),
-                   "name": "Firdaus"}
+                   "name": "Erick"}
         b = BaseModel(**my_dict)
         self.assertTrue(hasattr(b, "name"))
 
@@ -161,17 +185,14 @@ class TestBaseModel(unitest.TestCase):
         """
         my_dict = {"id": uuid4(), "created_at": datetime.utcnow().isoformat(),
                    "updated_at": datetime.utcnow().isoformat(),
-                   "name": "erick"}
+                   "name": "Erick"}
         b = BaseModel(**my_dict)
         self.assertTrue(b not in models.storage.all().values(),
                         "{}".format(models.storage.all().values()))
         del b
 
         b = BaseModel()
-        sleep(0.02)
-        temp_update = b.update_at
-        b.save()
-        self.assertLess(temp_update, b.updated_at)
+        self.assertTrue(b in models.storage.all().values())
 
     def test_that_save_method_updates_updated_at_attr(self):
         """
@@ -182,6 +203,7 @@ class TestBaseModel(unitest.TestCase):
         temp_update = b.updated_at
         b.save()
         self.assertLess(temp_update, b.updated_at)
+
     def test_that_save_can_update_two_or_more_times(self):
         """
         Tests that the save method updates 'updated_at' two times
@@ -222,8 +244,8 @@ class TestBaseModel(unitest.TestCase):
         """
         b = BaseModel()
         attrs = ["id", "created_at", "updated_at", "__class__"]
-        b.name = "Firdaus"
-        b.email = "firduas@gmail.com"
+        b.name = "Erick"
+        b.email = " erickadikah2030@gmail.com"
         attrs.extend(["name", "email"])
         for attr in attrs:
             self.assertIn(attr, b.to_dict())
@@ -260,3 +282,4 @@ class TestBaseModel(unitest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
