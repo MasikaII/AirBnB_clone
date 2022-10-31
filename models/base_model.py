@@ -1,48 +1,57 @@
 #!/usr/bin/python3
-"""
-A module containing a base class
-"""
+"""This module defines a base class for all models in the AirBnB clone"""
 from datetime import datetime
-from uuid import uuid4
-import json
-import models
+import uuid
 
 
 class BaseModel:
-    """ Describes the attibutes and methods of all other classes"""
+    """A base class for all models"""
+
     def __init__(self, *args, **kwargs):
-        if kwargs:
-            for key, value in kwargs.items():
-                if key == "created_at" or  key =="updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key == "__class__":
-                    continue
-                setattr(self, key, value)
-        else:
-            self.id = str(uuid4())
+        """Instatntiates a new model"""
+        if not kwargs:
+            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new()
+        else:
+
+            if "id" not in kwargs:
+                kwargs["id"] = str(uuid.uuid4())
+            if "created_at" not in kwargs:
+                kwargs["created_at"] = datetime.now()
+            else:
+                kwargs['created_at'] = datetime.strptime(
+                    kwargs['created_at'],
+                    '%Y-%m-%dT%H:%M:%S.%f'
+                )
+            if "updated_at" not in kwargs:
+                kwargs["updated_at"] = datetime.now()
+            else:
+                kwargs['updated_at'] = datetime.strptime(
+                    kwargs['updated_at'],
+                    '%Y-%m-%dT%H:%M:%S.%f'
+                )
+
+            if "__class__" in kwargs:
+                del kwargs['__class__']
+            self.__dict__.update(kwargs)
 
     def __str__(self):
-        """prints the string representation of the class"""
-        return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
+        """Returns a string representation of the instance"""
+        dictionary = self.__dict__
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, dictionary)
 
     def save(self):
-        """
-        updates the public instance attribute
-        updated_at with the current datetime
-        """
+        """Updates updated_at with current time when instance is changed"""
         self.updated_at = datetime.now()
-        models.storage.save()
 
-    def to_dict(s)
-        """
-        returns a dictionary containing all
-        keys/values of __dict__ of the instance
-        """
-        my_dict = self.__dict__.copy()
-        my_dict["__class__"] = self.__class__.__name__
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        return my_dict
+    def to_dict(self):
+        """Convert instance into dict format"""
+        dictionary = {}
+        dictionary.update(self.__dict__)
+        dictionary.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        return dictionary
