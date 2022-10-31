@@ -5,7 +5,7 @@ A module containing a base class
 from datetime import datetime
 from uuid import uuid4
 import json
-from models.__init__.py import storage
+import models
 
 
 class BaseModel:
@@ -22,7 +22,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            storage.new()
+            models.storage.new()
 
     def __str__(self):
         """prints the string representation of the class"""
@@ -34,7 +34,7 @@ class BaseModel:
         updated_at with the current datetime
         """
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(s)
         """
