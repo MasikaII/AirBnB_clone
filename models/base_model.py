@@ -6,49 +6,47 @@ A module containing a base class
 
 from datetime import datetime
 from uuid import uuid4
+import json
+import models
 
 
 class BaseModel:
-    """
-    A base class that defines all common attributes for other classes
-    """
+    """The base class that defines all common attributes for other classes"""
 
     def __init__(self, *args, **kwargs):
         """instantiates the public class attributes"""
-        if not kwargs:
-            self.id = str(uuid4())
-            self.created_at = self.updatye_at = datetime.now()
-            storage.new(self)
-        else:
+        if kwargs:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ('created_at', 'updated_at'):
-                        setattr(self, key, datetime.fromisoformat(value))
-                    else:
-                        setattr(self, key, value)
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key == "__class__":
+                    continue
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """prints the string representation of the class"""
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, self.__dict__)
+        return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
 
     def save(self):
         """
         updates the public instance attribute
         updated_at with the current datetime
         """
-        from models import storage
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """
         returns a dictionary containing all
         keys/values of __dict__ of the instance
         """
-        dict_1 = self.__dict__.copy()
-        dict_1["__class__"] = self.__class__.__name__
-        for k, v in self.__dict__.items():
-            if k in ("created_at", "updated_at"):
-                v = self.__dict__[k].isoformat()
-                dict_1[k] = v
-        return dict_1
+        my_dict = self.__dict__.copy()
+        my_dict["__class__"] = self.__class__.__name__
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        return my_dict
