@@ -4,13 +4,24 @@ A module containing a base class
 """
 from datetime import datetime
 from uuid import uuid4
-
+import json
+import models
 
 class BaseModel:
-    def __init__(self):
+    """ Describes the attibutes and methods of all other classes"""
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or  key =="updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key == "__class__":
+                    continue
+                setattr(self, key, value)
+        else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+
     def __str__(self):
         """prints the string representation of the class"""
         return f"[{self.__class__.__name__}] ({self.id}) ({self.__dict__})"
@@ -22,7 +33,7 @@ class BaseModel:
         """
         self.updated_at = datetime.now()
 
-    def to_dict(self):
+    def to_dict(s)
         """
         returns a dictionary containing all
         keys/values of __dict__ of the instance
