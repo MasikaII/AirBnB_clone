@@ -1,11 +1,19 @@
 #!/usr/bin/python3
 """Contains the entry point of a command interpreter"""
+
+
 import cmd
+from datetime import datetime
+import uuid
+from models.base_model import BaseModel
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
     """This is the class definition for the command interpreter"""
+
     prompt = "(hbnb) "
+    classeet n = [ "BaseModel"]
 
     def do_EOF(self, line):
         """ This is a method to exit the program"""
@@ -24,130 +32,146 @@ class HBNBCommand(cmd.Cmd):
         print("Quit command to exit the program\n")
 
     def emptyline(self):
-        """Do nothing when line is empty"""
+        """when line is empty print nothing"""
         pass
+        print("Quit command to exit the program")
 
-    """Creating the console commands"""
     def do_create(self, line):
-        """This is the command to create new instances
-        and saves it (to the JSON file)
-        Usage: create <name>"""
-        if not line:
-            print("** class name missing **")
-        elif line not in HBNBCommand.selected:
-            print("** class doesn't exist **")
+        """
+        Creates a new instance of BaseModel, saves it
+        (to the JSON file) and prints the id
+        """
+        if line:
+            if line in type(self).classes:
+                new_instance = eval(line)()
+                new_instance.save()
+                print(new_instance.id)
+
+            else:
+                print("** class doesn't exist **")
+
         else:
-            line = eval(line)()
-            line.save()
-            print(line.id)
+            print("** class name missing **")
 
     def do_show(self, line):
-        """Prints the string representation of an
-        instance based on the class name and id
-        usage: show BaseModel 1234-1234-1234
         """
-        all_objects = storage.all()
-
+        Prints the string representation of an instance
+        based on the class name and id
+        """
+        all_objs = storage.all()
         if line:
             line = line.split()
             if len(line) == 1:
-                print("** instance id missing **")
-            elif len(line) == 2:
+                if line[0] in type(self).classes:
+                    print("** instance id missing **")
+                else:
+                    print("** class doesn't exist **")
+            elif len(line) >= 2:
                 name = line[0]
                 name_id = line[1]
-
-                if name not in type(self).selected:
-                    print("** class doesn't exist **")
-
-                key_name = name + "." + name_id
-                if key_name in all_objects.keys():
-                    print(all_objects[key_name])
+                obj_key = line[0] + "." + line[1]
+                if obj_key in all_objs.keys():
+                    str_instance = all_objs[obj_key]
+                    print(str_instance)
                 else:
                     print("** no instance found **")
         else:
             print("** class name missing **")
 
     def do_destroy(self, line):
-        """Deletes an instance based on class name and id
-        usage: destroy BaseModel 1234-1234-1234
         """
-        all_objects = storage.all()
-
+        Deletes an instance based on the class nameand
+        id (save the change into the JSON file)
+        """
+        all_objs = storage.all()
         if line:
             line = line.split()
             if len(line) == 1:
-                print("** instance id missing **")
+                if line[0] in type(self).classes:
+                    print("** instance id missing **")
+                else:
+                    print("** class doesn't exist **")
+
             elif len(line) >= 2:
                 name = line[0]
                 name_id = line[1]
-
-                if name not in type(self).selected:
-                    print("** class doesn't exist **")
-
-                key_name = name + "." + name_id
-                if key_name in all_objects.keys():
-                    del all_objects[key_name]
+                obj_key = f"{line[0]}.{line[1]}"
+                if obj_key in all_objs.keys():
+                        del all_objs[obj_key]
+                        storage.save()
                 else:
                     print("** no instance found **")
-        else:
-            print("** class name missing **")
+            else:
+                print("** class name missing **")
 
     def do_all(self, line):
-        """ Prints all string representation of all instances
-            Usage: all BaseModel
         """
-        all_objects = storage.all()
+        Prints all string representation of all instances
+        based or not on the class name
+        """
         if line:
+            all_objs = storage.all()
             line = line.split()
-            if line[0] in type(self).selected:
-                if all_objects:
-                    for key, value in all_objects.items():
-                        print(value)
+            if len(line) == 1:
+                if line[0] in type(self).classes:
+                    if all_objs:
+                        for value in all_objs.values():
+                            print(value)
+                    else:
+                        pass
                 else:
-                    pass
+                    print("** class doesn't exist **")
             else:
-                print("** class doesn't exist **")
+                pass
+        else:
+            pass
 
     def do_update(self, line):
-        """Updates an instance based on the class name and id by adding
-        or updating attribute (save the change into the JSON file).
-        Usage: update BaseModel 1234-1234-1234 email "aibnb@mail.com"
         """
-        all_objects = storage.all()
+        Updates an instance based on the class name and id by adding or
+        updating attribute (save the change into the JSON file)
+        Usage: update <class name> <id> <attribute name> "<attribute value>"
+        """
+        all_objs = storage.all()
+        line = line.split()
         if line:
-            line = line.split()
-            if len(line) == 1 and line[0] not in type(self).selected:
-                print("** class doesn't exist**")
-
-            elif len(line) == 2:
-                key_name = line[0] + "." + line[1]
-                if key_name not in all_objects.keys():
-                    print("** no instance found **")
+            if len(line) == 1:
+                if line[0] == type(self).classes:
+                    print("** instance id missing **")
                 else:
+                    print("** class doesn't exist **")
+            elif len(line) == 2:
+                key = line[0] + "." + line[1]
+                if key in all_objs.keys():
                     print("** attribute name missing **")
+
+                else:
+                    print("** no instance found **")
+
             elif len(line) == 3:
-                key_name = line[0] + "." + line[1]
-                if key_name in all_objects.keys():
+                key = line[0] + "." + line[1]
+                if key in all_objs.keys():
                     print("** value missing **")
                 else:
                     print("** no instance found **")
+
             elif len(line) >= 4:
-                key_name = line[0] + "." + line[1]
-                if key_name in all_objects.keys():
-                    update_obj = all_objects[key_name]
-                    update_to_dict = update_obj.to_dict()
-                    class_name = update_to_dict["__class__"]
-                    update_to_dict[line[2]] = line[3]
-                    new_object = eval(class_name)(**update_to_dict)
-                    new_object.save()
-                    storage.new(new_object)
+                key = line[0] + "." + line[1]
+                if key in all_objs.keys():
+                    new_instance = all_objs[key].to_dict()
+                    attribute_key = line[2]
+                    attribute_value = line[3]
+                    new_instance[attribute_key] = attribute_value
+                    new_inst_obj = BaseModel(**new_instance)
+                    new_inst_obj.save()
+                    storage.new(new_inst_obj)
 
                 else:
                     print("** no instance found **")
+
         else:
-            print("** class name missing **")
+            print("** class doesn't exist **")
 
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     HBNBCommand().cmdloop()
