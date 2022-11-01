@@ -2,8 +2,8 @@
 """Creates an instance of class FileStorage and calls method reload"""
 
 
-import json
 from models.engine.file_storage import FileStorage
+import json
 
 
 storage = FileStorage()
