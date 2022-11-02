@@ -6,7 +6,7 @@ import cmd
 from datetime import datetime
 import uuid
 from models.base_model import BaseModel
-from models import Storage
+from models import storage
 from models.user import User
 from models.state import State
 from models.city import City
@@ -19,7 +19,14 @@ class HBNBCommand(cmd.Cmd):
     """This is the class definition for the command interpreter"""
 
     prompt = "(hbnb) "
-    classes = [ "BaseModel", "User", "State", "City","Amenity", "Place", "Review"]
+    classes = [
+        "BaseModel",
+        "User",
+        "State",
+        "City",
+        "Amenity",
+        "Place",
+        "Review"]
 
     def do_EOF(self, line):
         """ This is a method to exit the program"""
@@ -102,13 +109,14 @@ class HBNBCommand(cmd.Cmd):
                 name = line[0]
                 name_id = line[1]
                 obj_key = f"{line[0]}.{line[1]}"
+
                 if obj_key in all_objs.keys():
-                        del all_objs[obj_key]
-                        storage.save()
+                    del all_objs[obj_key]
+                    storage.save()
                 else:
                     print("** no instance found **")
-            else:
-                print("** class name missing **")
+        else:
+            print("** class name missing **")
 
     def do_all(self, line):
         """
