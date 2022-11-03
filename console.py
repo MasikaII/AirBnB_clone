@@ -153,14 +153,14 @@ class HBNBCommand(cmd.Cmd):
                 if line[0] == type(self).classes:
                     print("** instance id missing **")
                 else:
-                    print("** class doesn't exist **")
+                    print("** no instance found **")
             elif len(line) == 2:
                 key = line[0] + "." + line[1]
                 if key in all_objs.keys():
                     print("** attribute name missing **")
 
                 else:
-                    print("** no instance found **")
+                    print("** class doesn't exist **")
 
             elif len(line) == 3:
                 key = line[0] + "." + line[1]
