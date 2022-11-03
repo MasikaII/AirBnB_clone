@@ -138,7 +138,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 pass
         else:
-            pass
+            print("** class doesn't exist **")
 
     def do_update(self, line):
         """
@@ -151,7 +151,7 @@ class HBNBCommand(cmd.Cmd):
         if line:
             if len(line) == 1:
                 if line[0] == type(self).classes:
-                    print("** instance id missing **")
+                    print("** class doesn't exist **")
                 else:
                     print("** no instance found **")
             elif len(line) == 2:
@@ -160,7 +160,7 @@ class HBNBCommand(cmd.Cmd):
                     print("** attribute name missing **")
 
                 else:
-                    print("** class doesn't exist **")
+                    print("** no instance found **")
 
             elif len(line) == 3:
                 key = line[0] + "." + line[1]
